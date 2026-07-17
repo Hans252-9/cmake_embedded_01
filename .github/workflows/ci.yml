@@ -44,3 +44,17 @@ jobs:
       - name: Build firmware
         run: |
           cmake --build build-${{ matrix.mcu }}-${{ matrix.build_type }}
+      - name: Show firmware size
+        run: |
+          arm-none-eabi-size build-${{ matrix.mcu }}-${{ matrix.build_type }}/main.elf
+
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-${{ matrix.mcu }}-${{ matrix.build_type }}
+          path: |
+            build-${{ matrix.mcu }}-${{ matrix.build_type }}/main.elf
+            build-${{ matrix.mcu }}-${{ matrix.build_type }}/main.bin
+            build-${{ matrix.mcu }}-${{ matrix.build_type }}/main.hex
+            build-${{ matrix.mcu }}-${{ matrix.build_type }}/main.map
+          if-no-files-found: error

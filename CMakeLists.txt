@@ -83,3 +83,17 @@ target_link_options(main PRIVATE
     --specs=nosys.specs
     -nostartfiles
 )
+
+add_custom_command(TARGET main POST_BUILD
+    COMMAND ${CMAKE_OBJCOPY}
+            -O binary
+            $<TARGET_FILE:main>
+            $<TARGET_FILE_DIR:main>/$<TARGET_FILE_BASE_NAME:main>.bin
+    COMMAND ${CMAKE_OBJCOPY}
+            -O ihex
+            $<TARGET_FILE:main>
+            $<TARGET_FILE_DIR:main>/$<TARGET_FILE_BASE_NAME:main>.hex
+    COMMENT "Generating BIN and Intel HEX firmware images"
+    VERBATIM
+    )
+
