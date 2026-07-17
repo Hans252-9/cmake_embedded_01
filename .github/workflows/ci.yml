@@ -58,3 +58,11 @@ jobs:
             build-${{ matrix.mcu }}-${{ matrix.build_type }}/main.hex
             build-${{ matrix.mcu }}-${{ matrix.build_type }}/main.map
           if-no-files-found: error
+       - name: Run cppcheck
+        run: |
+          cppcheck \
+            --enable=warning,style,performance,portability \
+            --error-exitcode=1 \
+            --std=c11 \
+            --suppress=missingIncludeSystem \
+            app drivers firmware diagnostics
