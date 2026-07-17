@@ -1,0 +1,38 @@
+# Build directories
+build*/
+out/
+cmake-build-*/
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+compile_commands.json
+cmake_install.cmake
+install_manifest.txt
+
+# Ninja
+.ninja_deps
+.ninja_log
+build.ninja
+
+# IDE
+.vscode/
+.idea/
+
+# Visual Studio
+*.sln
+*.vcxproj*
+*.user
+
+# Generated binaries
+*.elf
+*.bin
+*.hex
+*.map
+*.o
+*.obj
+*.a
+
+# OS
+.DS_Store
+Thumbs.db
