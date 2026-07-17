@@ -39,7 +39,7 @@ jobs:
           cmake -S . -B build-${{ matrix.mcu }}-${{ matrix.build_type }} \
             -DMCU=${{ matrix.mcu }} \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-            -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-none-eabi.cmake
+            -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain/arm-none-eabi.cmake
 
       - name: Build firmware
         run: |
