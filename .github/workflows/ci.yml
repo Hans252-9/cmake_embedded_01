@@ -15,9 +15,9 @@ jobs:
       matrix:
         build_type: [Debug, Release]
         mcu:
-        - stm32f103c8
-        - stm32f407vg
-        - stm32h743zi
+          - stm32f103c8
+          - stm32f407vg
+          - stm32h743zi
 
     steps:
       - name: Checkout repository
@@ -37,6 +37,7 @@ jobs:
       - name: Configure CMake
         run: |
           cmake -S . -B build-${{ matrix.mcu }}-${{ matrix.build_type }} \
+            -G Ninja \
             -DMCU=${{ matrix.mcu }} \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
             -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain/arm-none-eabi.cmake
@@ -44,9 +45,23 @@ jobs:
       - name: Build firmware
         run: |
           cmake --build build-${{ matrix.mcu }}-${{ matrix.build_type }}
+
       - name: Show firmware size
         run: |
-          arm-none-eabi-size build-${{ matrix.mcu }}-${{ matrix.build_type }}/main.elf
+          arm-none-eabi-size \
+            build-${{ matrix.mcu }}-${{ matrix.build_type }}/main.elf
+
+      - name: Analyze firmware with custom NodeJS action
+        id: firmware_info
+        uses: ./.github/actions/firmware-info
+        with:
+          elf-file: build-${{ matrix.mcu }}-${{ matrix.build_type }}/main.elf
+          mcu: ${{ matrix.mcu }}
+          build-type: ${{ matrix.build_type }}
+
+      - name: Print custom action output
+        run: |
+          echo "ELF file size: ${{ steps.firmware_info.outputs.file-size }} bytes"
 
       - name: Upload firmware artifacts
         uses: actions/upload-artifact@v4

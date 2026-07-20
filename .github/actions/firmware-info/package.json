@@ -1,0 +1,19 @@
+{
+  "name": "firmware-info",
+  "version": "1.0.0",
+  "description": "GitHub Action for analyzing embedded firmware",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "ncc build src/index.js -o dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@vercel/ncc": "^0.44.1"
+  },
+  "dependencies": {
+    "@actions/core": "^1.11.1"
+  }
+}
