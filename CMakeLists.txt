@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.13)
 project(TEST_11 LANGUAGES C)
 
+list(APPEND CMAKE_MODULE_PATH
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake"
+)
+
+include(CompilerWarnings)
+
 set(CMAKE_EXECUTABLE_SUFFIX ".elf")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -40,13 +46,6 @@ message(STATUS "Linker script: ${LINKER_SCRIPT}")
 add_library(project_features INTERFACE)
 target_compile_features(project_features INTERFACE c_std_11)
 
-add_library(project_warnings INTERFACE)
-target_compile_options(project_warnings INTERFACE
-        -Wall
-        -Wextra
-        -Wpedantic
-        )
-
 add_library(project_config INTERFACE)
 target_compile_options(project_config INTERFACE
         ${MCU_COMPILE_OPTIONS}
@@ -74,9 +73,10 @@ add_executable(main
 target_link_libraries(main PRIVATE
         control
         project_features
-        project_warnings
         project_config
         )
+        
+set_project_warnings(main)
 
 target_link_options(main PRIVATE
     -T${LINKER_SCRIPT}

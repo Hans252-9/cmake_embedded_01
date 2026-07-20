@@ -11,6 +11,7 @@ target_link_libraries(${LIBRARY_NAME} PRIVATE
         platform
         drivers
         project_features
-        project_warnings
         project_config
 )
+
+set_project_warnings(${LIBRARY_NAME})
