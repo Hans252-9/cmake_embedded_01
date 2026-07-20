@@ -1,0 +1,26 @@
+stages:
+  - build
+
+build_firmware:
+  stage: build
+  image: ubuntu:24.04
+
+  before_script:
+    - apt-get update
+    - apt-get install -y cmake ninja-build gcc-arm-none-eabi
+
+  script:
+    - cmake -S . -B build
+      -G Ninja
+      -DMCU=stm32f103c8
+      -DCMAKE_BUILD_TYPE=Debug
+      -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain/arm-none-eabi.cmake
+    - cmake --build build
+    - arm-none-eabi-size build/main.elf
+
+  artifacts:
+    paths:
+      - build/main.elf
+      - build/main.bin
+      - build/main.hex
+      - build/main.map
