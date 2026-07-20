@@ -5,22 +5,41 @@ build_firmware:
   stage: build
   image: ubuntu:24.04
 
+  parallel:
+    matrix:
+      - MCU:
+          - stm32f103c8
+          - stm32f407vg
+          - stm32h743zi
+        BUILD_TYPE:
+          - Debug
+          - Release
+
   before_script:
     - apt-get update
     - apt-get install -y cmake ninja-build gcc-arm-none-eabi
 
   script:
-    - cmake -S . -B build
+    - >
+      cmake
+      -S .
+      -B build-${MCU}-${BUILD_TYPE}
       -G Ninja
-      -DMCU=stm32f103c8
-      -DCMAKE_BUILD_TYPE=Debug
+      -DMCU=${MCU}
+      -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
       -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain/arm-none-eabi.cmake
-    - cmake --build build
-    - arm-none-eabi-size build/main.elf
+
+    - cmake --build build-${MCU}-${BUILD_TYPE}
+
+    - arm-none-eabi-size build-${MCU}-${BUILD_TYPE}/main.elf
 
   artifacts:
+    name: "firmware-${MCU}-${BUILD_TYPE}"
+
+    expire_in: 7 days
+
     paths:
-      - build/main.elf
-      - build/main.bin
-      - build/main.hex
-      - build/main.map
+      - build-${MCU}-${BUILD_TYPE}/main.elf
+      - build-${MCU}-${BUILD_TYPE}/main.bin
+      - build-${MCU}-${BUILD_TYPE}/main.hex
+      - build-${MCU}-${BUILD_TYPE}/main.map
